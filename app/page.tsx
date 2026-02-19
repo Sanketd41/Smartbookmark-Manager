@@ -13,6 +13,7 @@ interface Bookmark {
 export default function Home() {
   const [session, setSession] = useState<any>(null);
   const [bookmarks, setBookmarks] = useState<any[]>([]);
+  const [editingBookmark, setEditingBookmark] = useState(null);
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
 
@@ -41,7 +42,12 @@ export default function Home() {
       .channel("bookmarks")
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "bookmarks" },
+        {
+          event: "*",
+          schema: "public",
+          table: "bookmarks",
+          filter: `user_id=eq.${session.user.id}`,
+        },
         () => fetchBookmarks()
       )
       .subscribe();
@@ -55,6 +61,7 @@ export default function Home() {
     const { data } = await supabase
       .from("bookmarks")
       .select("*")
+      .eq("user_id", session.user.id)
       .order("created_at", { ascending: false });
 
     setBookmarks(data || []);
@@ -75,6 +82,26 @@ export default function Home() {
 
   const deleteBookmark = async (id: string) => {
     await supabase.from("bookmarks").delete().eq("id", id);
+  };
+
+  const editBookmark = (bookmark: Bookmark) => {
+    setEditingBookmark(bookmark as any);
+    setTitle(bookmark.title);
+    setUrl(bookmark.url);
+  };
+
+  const updateBookmark = async () => {
+    if (!editingBookmark) return;
+
+    const updatedBookmark = { ...editingBookmark, title, url };
+    // Update bookmark logic (e.g., Supabase update query)
+
+    setBookmarks((prev) =>
+      prev.map((b) => (b.id === editingBookmark.id ? updatedBookmark : b))
+    );
+    setEditingBookmark(null);
+    setTitle("");
+    setUrl("");
   };
 
   if (!session) {
@@ -111,12 +138,21 @@ export default function Home() {
         />
       </div>
 
-      <button
-        onClick={addBookmark}
-        className="bg-blue-600 text-white px-4 py-2 rounded"
-      >
-        Add Bookmark
-      </button>
+      {editingBookmark ? (
+        <button
+          onClick={updateBookmark}
+          className="bg-green-600 text-white px-4 py-2 rounded"
+        >
+          Update Bookmark
+        </button>
+      ) : (
+        <button
+          onClick={addBookmark}
+          className="bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          Add Bookmark
+        </button>
+      )}
 
       <div className="space-y-2">
         {bookmarks.map((b) => (
@@ -124,20 +160,24 @@ export default function Home() {
             key={b.id}
             className="flex justify-between border p-3 rounded"
           >
-            <a
-              href={b.url}
-              target="_blank"
-              className="text-blue-600"
-            >
+            <a href={b.url} target="_blank" className="text-blue-600">
               {b.title}
             </a>
 
-            <button
-              onClick={() => deleteBookmark(b.id)}
-              className="text-red-500"
-            >
-              Delete
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => editBookmark(b)}
+                className="bg-yellow-500 text-white px-2 py-1 rounded"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => deleteBookmark(b.id)}
+                className="bg-red-500 text-white px-2 py-1 rounded"
+              >
+                Delete
+              </button>
+            </div>
           </div>
         ))}
       </div>
