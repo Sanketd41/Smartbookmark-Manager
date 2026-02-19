@@ -161,7 +161,7 @@ This provides defense-in-depth security at the database level.
 
 **Solution**: Added both development and production callback URLs in Supabase Google OAuth settings:
 - Development: `http://localhost:3000/auth/callback`
-- Production: `https://your-app.vercel.app/auth/callback`
+- Production: `https://smartbookmark-manager-delta.vercel.app/#`
 
 ### Problem 5: Real-time Subscription Not Working Initially
 

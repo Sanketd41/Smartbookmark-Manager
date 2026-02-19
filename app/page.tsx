@@ -121,7 +121,7 @@ export default function Home() {
 
   return (
     <div className="max-w-xl mx-auto mt-10 space-y-6">
-      <h1 className="text-2xl font-bold">My Bookmarks</h1>
+      <h1 className="bg-green-500 text-white p-4 rounded-lg text-2xl font-bold">My Bookmarks</h1>
 
       <div className="flex gap-2">
         <input
@@ -184,7 +184,7 @@ export default function Home() {
 
       <button
         onClick={() => supabase.auth.signOut()}
-        className="text-sm text-gray-500"
+        className="bg-orange-500 text-sm text-white px-4 py-2 rounded"
       >
         Logout
       </button>
