@@ -12,8 +12,8 @@ interface Bookmark {
 }
 export default function Home() {
   const [session, setSession] = useState<any>(null);
-  const [bookmarks, setBookmarks] = useState<any[]>([]);
-  const [editingBookmark, setEditingBookmark] = useState(null);
+  const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+  const [editingBookmark, setEditingBookmark] = useState<Bookmark | null>(null);
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
 
@@ -85,7 +85,7 @@ export default function Home() {
   };
 
   const editBookmark = (bookmark: Bookmark) => {
-    setEditingBookmark(bookmark as any);
+    setEditingBookmark(bookmark);
     setTitle(bookmark.title);
     setUrl(bookmark.url);
   };
