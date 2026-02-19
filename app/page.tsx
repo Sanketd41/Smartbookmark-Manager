@@ -111,7 +111,7 @@ export default function Home() {
           onClick={() =>
             supabase.auth.signInWithOAuth({ provider: "google" })
           }
-          className="bg-blue-600 text-white px-6 py-3 rounded-lg"
+          className="bg-green-600 text-white px-6 py-3 rounded-lg"
         >
           Login with Google
         </button>
