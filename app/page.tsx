@@ -106,12 +106,18 @@ export default function Home() {
 
   if (!session) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex flex-col items-center justify-center h-screen space-y-4">
+        <h1 className="absolute top-8 text-3xl font-bold text-gray-700">
+          Welcome to Bookmark Manager!
+        </h1>
+        <p className="absolute top-25 text-gray-500">
+          Save, organize, and access your favorite links anytime, anywhere.
+        </p>
         <button
           onClick={() =>
             supabase.auth.signInWithOAuth({ provider: "google" })
           }
-          className="bg-green-600 text-white px-6 py-3 rounded-lg"
+          className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700"
         >
           Login with Google
         </button>
